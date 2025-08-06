@@ -1,0 +1,32 @@
+agents:
+  - name: GoogleSearchFetcherAgent
+    module: data_fetcher.Google_Search
+    class_or_function: fetch_Google_Search_results
+
+  - name: SOVReportGeneratorAgent
+    module: analysis.strategic_report
+    class_or_function: generate_sov_report
+
+tasks:
+  - name: FetchGoogleDataTask
+    agent: GoogleSearchFetcherAgent
+    input: keyword
+    output: Google Search_data
+
+  - name: GenerateSOVReportTask
+    agent: SOVReportGeneratorAgent
+    input:
+      brand_name: brand_name
+      competitors: competitors
+      keyword: keyword
+      search_data: Google_Search_data
+    output: final_sov_report
+
+workflow:
+  - task: FetchGoogleDataTask
+  - task: GenerateSOVReportTask
+
+sources:
+  - name: Google_Search_api
+    type: api
+    url: "https://serpapi.com/search?engine=google&q={query}"
